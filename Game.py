@@ -1,3 +1,4 @@
+print('hello world')
 import pygame as pg
 import sys
 BLACK=(255,255,255)
