@@ -19,8 +19,12 @@ BALL_WIDTH=60
 BALL_HEIGHT=60
 BALL_X=50
 BALL_Y=50
-BALL_SPEED=2
-
+BALL_SPEED=3
+BALL_DIRECTION=pg.math.Vector2(1,1).normalize()
+TOP_BORDER = pg.Rect(0,0,SCREEN_WIDTH, 1)
+BOTTOM_BORDER = pg.Rect(0,SCREEN_HEIGHT,SCREEN_WIDTH,1)
+LEFT_BORDER = pg.Rect(0,0,1,SCREEN_HEIGHT)
+RIGHT_BORDER = pg.Rect(SCREEN_WIDTH,0,1,SCREEN_HEIGHT)
 
 FPS=120
 
@@ -38,7 +42,10 @@ while True:
         PLATFORM_X+=PLATFORM_SPEED
         PLATFORM_X=min(SCREEN_WIDTH-PLATFORM_WIDTH,PLATFORM_X)
 
-    BALL_Y+=BALL_SPEED
+
+    speed_vector = BALL_DIRECTION*BALL_SPEED
+    BALL_Y+=speed_vector.y
+    BALL_X+=speed_vector.x
 
     screen.fill(WHITE)
 
@@ -46,6 +53,25 @@ while True:
     pg.draw.rect(screen,BLACK,platform)
     ball=pg.Rect(BALL_X,BALL_Y,BALL_WIDTH,BALL_HEIGHT)
     pg.draw.rect(screen, (255,0,0),ball)
+
+    
+    if ball.colliderect(platform):
+        BALL_DIRECTION=BALL_DIRECTION.reflect(pg.math.Vector2(0,1))
+    if ball.colliderect(TOP_BORDER):
+        BALL_DIRECTION=BALL_DIRECTION.reflect(pg.math.Vector2(0,1))
+    if ball.colliderect(BOTTOM_BORDER):
+        BALL_DIRECTION=BALL_DIRECTION.reflect(pg.math.Vector2(0,-1))
+    if ball.colliderect(LEFT_BORDER):
+        BALL_DIRECTION=BALL_DIRECTION.reflect(pg.math.Vector2(1,0))
+    if ball.colliderect(RIGHT_BORDER):
+        BALL_DIRECTION=BALL_DIRECTION.reflect(pg.math.Vector2(1,0))
+
+    if BALL_Y <0:
+        BALL_SPEED =- BALL_SPEED
+
+    if BALL_Y >750:
+        BALL_SPEED =- BALL_SPEED
+        sys.exit()
 
     pg.display.flip() 
     Clock.tick(FPS) 
