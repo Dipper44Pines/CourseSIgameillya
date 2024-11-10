@@ -88,7 +88,7 @@ def game(screen, Clock):
         if ball.colliderect(RIGHT_BORDER):
             BALL_DIRECTION=BALL_DIRECTION.reflect(pg.math.Vector2(-1,0))
         
-
+8
         screen.blit(text_surface,(20,20))
         pg.display.flip() 
         Clock.tick(FPS)
