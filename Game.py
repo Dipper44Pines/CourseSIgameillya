@@ -1,6 +1,10 @@
 print('hello world')
 import pygame as pg
 import sys
+import pygame.mixer as mix
+mix.init()
+
+
 
 pg.init()
 
@@ -11,6 +15,10 @@ SCREEN_WIDTH=600
 SCREEN_HEIGHT=800
 
 def_font = pg.font.Font(pg.font.get_default_font(),30)
+sound_pan = mix.Sound("METAL.mp3")
+sound_over = pg.mixer.Sound("GTASAN.mp3")
+sound_start = pg.mixer.Sound("METAL.mp3")
+sound_background = pg.mixer.Sound("MUSIK.mp3")
 
 TOP_BORDER = pg.Rect(0,0,SCREEN_WIDTH, 1)
 BOTTOM_BORDER = pg.Rect(0,SCREEN_HEIGHT,SCREEN_WIDTH,1)
@@ -32,14 +40,16 @@ def game(screen, Clock,assets):
 
     FPS=120
 
+    sound_background.play(1)
     BALL_X=100
     BALL_Y=100
     BALL_SPEED=5
     BALL_DIRECTION=pg.math.Vector2(1,1).normalize()
 
+
     COUNTER = 0
 
-
+    sound_pan.play()
     
 
 
@@ -65,6 +75,10 @@ def game(screen, Clock,assets):
 
         screen.blit(assets['background'],(0,0))
 
+        
+
+
+
         # platform=pg.Rect(PLATFORM_X,PLATFORM_Y,PLATFORM_WIDTH,PLATFORM_HEIGHT)
         # pg.draw.rect(screen,BLACK,platform)
         ball = assets['ball'].get_rect()
@@ -88,6 +102,7 @@ def game(screen, Clock,assets):
 
         
         if ball.colliderect(platform):
+            sound_pan.play()
             collision_vector = (ball_centre[0] - platform_centre[0],ball_centre[1] - platform_centre[1])
             BALL_DIRECTION=pg.math.Vector2(collision_vector).normalize()
             COUNTER += 1
@@ -95,6 +110,7 @@ def game(screen, Clock,assets):
             BALL_DIRECTION=BALL_DIRECTION.reflect(pg.math.Vector2(0,1))
         if ball.colliderect(BOTTOM_BORDER):
             BALL_DIRECTION=BALL_DIRECTION.reflect(pg.math.Vector2(0,-1))
+            sound_over.play()
             break
         if ball.colliderect(LEFT_BORDER):
             BALL_DIRECTION=BALL_DIRECTION.reflect(pg.math.Vector2(1,0))
@@ -124,8 +140,8 @@ if __name__ == '__main__':
     while True:
         game(screen_out, Clock_out,assets)
 
-        finish_text = def_font.render('Game over', False, (0, 255 ,0))
-        screen_out.blit(finish_text, (SCREEN_WIDTH/2-30, SCREEN_HEIGHT/2))
+        finish_text = def_font.render('Game over, retstart - R', False, (0, 255 ,0))
+        screen_out.blit(finish_text, (SCREEN_WIDTH/4, SCREEN_HEIGHT/2))
         pg.display.flip()
         while True:
             for event in pg.event.get(): 
